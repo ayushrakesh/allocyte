@@ -20,6 +20,31 @@ struct vm_page_for_families
 
 #define MAX_FAMILIES_PER_VM_PAGE (SYSTEM_PAGE_SIZE - sizeof(vm_page_for_families *)) / sizeof(vm_page_family)
 
+typedef enum
+{
+  MM_FALSE,
+  MM_TRUE,
+} vm_bool_t;
+
+struct block_meta_data
+{
+  vm_bool_t is_free;
+  uint32_t block_size;
+  uint32_t offset;
+  struct block_meta_data *prev;
+  struct block_meta_data *next;
+};
+
+#define offset_of(container_structure, field_name) ((size_t) & (((container_structure *)0)->field_name))
+
+#define MM_GET_PAGE_FROM_META_BLOCK(block_meta_data_ptr) ((void *)((char *)block_meta_data_ptr - block_meta_data_ptr->offset))
+
+#define NEXT_META_BLOCK(block_meta_data_ptr) (block_meta_data_ptr->next)
+
+#define NEXT_META_BLOCK_BY_SIZE(block_meta_data_ptr) (block_meta_data *)((char *)(block_meta_data_ptr + 1) + block_meta_data_ptr->block_size)
+
+#define PREV_META_BLOCK(block_meta_data_ptr) (block_meta_data_ptr->prev)
+
 #define ITERATE_PAGE_FAMILIES_BEGIN(vm_page_for_families_ptr, curr)       \
   {                                                                       \
     uint32_t count = 0;                                                   \
