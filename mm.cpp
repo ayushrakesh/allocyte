@@ -76,6 +76,20 @@ void mm_instantiate_page_family(const char *struct_name, uint32_t struct_size)
   page_family_curr->struct_size = struct_size;
 }
 
+static void mm_union_free_blocks(block_meta_data *first, block_meta_data *second)
+{
+  assert(first->is_free == MM_TRUE && second->is_free == MM_TRUE);
+
+  first->block_size += second->block_size + sizeof(block_meta_data);
+
+  first->next = second->next;
+
+  if (second->next)
+  {
+    second->next->prev = first;
+  }
+}
+
 // int main()
 // {
 //   mm_init();

@@ -45,6 +45,13 @@ struct block_meta_data
 
 #define PREV_META_BLOCK(block_meta_data_ptr) (block_meta_data_ptr->prev)
 
+#define mm_bind_blocks_for_allocation(allocated_meta_block, free_meta_block) \
+  free_meta_block->prev = allocated_meta_block;                              \
+  free_meta_block->next = allocated_meta_block->next;                        \
+  allocated_meta_block->next = free_meta_block;                              \
+  if (free_meta_block->next)                                                 \
+    free_meta_block->next->prev = free_meta_block;
+
 #define ITERATE_PAGE_FAMILIES_BEGIN(vm_page_for_families_ptr, curr)       \
   {                                                                       \
     uint32_t count = 0;                                                   \
