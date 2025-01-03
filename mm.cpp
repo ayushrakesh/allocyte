@@ -17,6 +17,12 @@ void mm_init()
   SYSTEM_PAGE_SIZE = getpagesize();
 }
 
+static inline uint32_t
+mm_max_page_allocatable_memory(int units)
+{
+  return (uint32_t)((SYSTEM_PAGE_SIZE * units) - offset_of(vm_page, page_memory));
+}
+
 static void *mm_get_new_vm_page_from_kernel(int units)
 {
   void *vm_page = mmap(0, units * SYSTEM_PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_ANON | MAP_PRIVATE, 0, 0);
@@ -29,6 +35,32 @@ static void *mm_get_new_vm_page_from_kernel(int units)
 
   std::memset(vm_page, 0, units * SYSTEM_PAGE_SIZE);
   return vm_page;
+}
+
+vm_page *allocate_vm_page(vm_page_family *page_family)
+{
+  vm_page *page = (vm_page *)mm_get_new_vm_page_from_kernel(1);
+
+  MARK_VM_PAGE_EMPTY(page);
+
+  page->meta_block.block_size = mm_max_page_allocatable_memory(1);
+  page->meta_block.offset = offset_of(vm_page, meta_block);
+
+  page->next = NULL;
+  page->prev = NULL;
+
+  page->pg_family = page_family;
+
+  if (page_family->first_page == NULL)
+  {
+    page_family->first_page = page;
+    return page;
+  }
+
+  page->next = page_family->first_page;
+  page_family->first_page->prev = page;
+  page_family->first_page = page;
+  return page;
 }
 
 void mm_instantiate_page_family(const char *struct_name, uint32_t struct_size)
@@ -88,6 +120,15 @@ static void mm_union_free_blocks(block_meta_data *first, block_meta_data *second
   {
     second->next->prev = first;
   }
+}
+
+vm_bool_t mm_is_vm_page_empty(vm_page *page)
+{
+  if (page->meta_block.next == NULL && page->meta_block.prev == NULL && page->meta_block.is_free == MM_TRUE)
+  {
+    return MM_TRUE;
+  }
+  return MM_FALSE;
 }
 
 // int main()

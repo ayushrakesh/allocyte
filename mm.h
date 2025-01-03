@@ -6,10 +6,13 @@
 
 #define MM_MAX_STRUCT_NAME 32
 
+struct vm_page;
+
 struct vm_page_family
 {
   char struct_name[MM_MAX_STRUCT_NAME];
   uint32_t struct_size;
+  vm_page *first_page;
 };
 
 struct vm_page_for_families
@@ -35,6 +38,15 @@ struct block_meta_data
   struct block_meta_data *next;
 };
 
+struct vm_page
+{
+  struct vm_page *next;
+  struct vm_page *prev;
+  struct vm_page_family *pg_family; /*back pointer*/
+  block_meta_data meta_block;
+  char page_memory[0]; // First data block in VM page
+};
+
 #define offset_of(container_structure, field_name) ((size_t) & (((container_structure *)0)->field_name))
 
 #define MM_GET_PAGE_FROM_META_BLOCK(block_meta_data_ptr) ((void *)((char *)block_meta_data_ptr - block_meta_data_ptr->offset))
@@ -44,6 +56,11 @@ struct block_meta_data
 #define NEXT_META_BLOCK_BY_SIZE(block_meta_data_ptr) (block_meta_data *)((char *)(block_meta_data_ptr + 1) + block_meta_data_ptr->block_size)
 
 #define PREV_META_BLOCK(block_meta_data_ptr) (block_meta_data_ptr->prev)
+
+#define MARK_VM_PAGE_EMPTY(vm_page_ptr) \
+  vm_page_ptr->meta_block.next = NULL;  \
+  vm_page_ptr->meta_block.prev = NULL;  \
+  vm_page_ptr->meta_block.is_free = MM_TRUE;
 
 #define mm_bind_blocks_for_allocation(allocated_meta_block, free_meta_block) \
   free_meta_block->prev = allocated_meta_block;                              \
