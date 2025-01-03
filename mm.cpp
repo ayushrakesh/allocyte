@@ -37,6 +37,16 @@ static void *mm_get_new_vm_page_from_kernel(int units)
   return vm_page;
 }
 
+/*Function to return a page to kernel*/
+static void mm_return_vm_page_to_kernel(void *vm_page, int units)
+{
+
+  if (munmap(vm_page, units * SYSTEM_PAGE_SIZE))
+  {
+    cout << "Error : Could not munmap VM page to kernel" << endl;
+  }
+}
+
 vm_page *allocate_vm_page(vm_page_family *page_family)
 {
   vm_page *page = (vm_page *)mm_get_new_vm_page_from_kernel(1);
@@ -61,6 +71,31 @@ vm_page *allocate_vm_page(vm_page_family *page_family)
   page_family->first_page->prev = page;
   page_family->first_page = page;
   return page;
+}
+
+void deallocate_vm_page(vm_page *page)
+{
+  vm_page_family *family = page->pg_family;
+
+  if (family->first_page == page)
+  {
+    family->first_page = page->next;
+    if (page->next)
+    {
+      page->next->prev = NULL;
+    }
+    page->next = NULL;
+    page->prev = NULL;
+    mm_return_vm_page_to_kernel((void *)page, 1);
+    return;
+  }
+
+  if (page->next)
+  {
+    page->next->prev = page->prev;
+  }
+  page->prev->next = page->next;
+  mm_return_vm_page_to_kernel((void *)page, 1);
 }
 
 void mm_instantiate_page_family(const char *struct_name, uint32_t struct_size)
