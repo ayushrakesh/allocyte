@@ -1,0 +1,7 @@
+*.o
+*.exe
+build/
+__pycache__
+*.swp
+*.swo
+*.log
