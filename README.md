@@ -3,37 +3,6 @@
 This is a C++ project implementing a custom memory management system with multiple components.
 
 ## Requirements
-- GCC/G++ compiler (version 7.0 or higher)
-- Make utility
-- Docker (for containerized deployment)
-
-## Compilation Steps
-1. Ensure all dependencies are installed.
-2. Open a terminal in the project directory.
-3. Compile the individual source files:
-   - `g++ -g -c testapp.cpp -o testapp.o`
-   - `g++ -g -c mm.cpp -o mm.o`
-   - `g++ -g -c gluethread/glthread.cpp -o gluethread/glthread.o`
-4. Link the object files to create the executable:
-   - `g++ -g testapp.o mm.o gluethread/glthread.o -o exe`
-5. Run the executable:
-   - `./exe`
-
-## Docker Deployment
-- Follow the instructions in the `Makefile` to build and run the Docker image.
-- Push the image to Docker Hub after logging in with your Docker Hub credentials.
-
-## Notes
-- Ensure the `gluethread` directory and all header files (e.g., `mm.hpp`, `glthread.hpp`) are accessible.
-- See the `Makefile` for automated build and Docker commands.
-
-----------------------------------------------
-
-# C++ Memory Management Project
-
-This is a C++ project implementing a custom memory management system with multiple components.
-
-## Requirements
 - **For Local Compilation:**
   - GCC/G++ compiler (version 7.0 or higher)
   - Make utility
