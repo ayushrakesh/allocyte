@@ -1,6 +1,6 @@
-# C++ Memory Management Project
+# Memory Manager - allocyte
 
-This is a C++ project implementing a custom memory management system with multiple components.
+This is a C++ project implementing a custom linux memory management system with multiple components.
 
 ## Requirements
 - **For Local Compilation:**
@@ -14,42 +14,48 @@ This is a C++ project implementing a custom memory management system with multip
 If you prefer to compile and run the project manually on your local machine, follow these steps:
 
 1. **Install Dependencies:**
-   - Ensure GCC/G++, and Make are installed. On Ubuntu, install them with:
+- Ensure GCC/G++, and Make are installed. On Ubuntu, install them with:
 
-   sudo apt-get update
-   sudo apt-get install g++ make
+   #
+       sudo apt-get update
+       sudo apt-get install g++ make
 
 
-2. **Navigate to the Project Directory:**
+3. **Navigate to the Project Directory:**
 - Open a terminal and change to the project directory:
 
-  cd /path/to/allocyte
+  #
+      cd /path/to/allocyte
 
 
 3. **Compile the Source Files:**
 - Compile each source file into object files:
 
-   g++ -g -c testapp.cpp -o testapp.o
-   g++ -g -c mm.cpp -o mm.o
-   g++ -g -c gluethread/glthread.cpp -o gluethread/glthread.o
+  #
+      g++ -g -c testapp.cpp -o testapp.o
+      g++ -g -c mm.cpp -o mm.o
+      g++ -g -c gluethread/glthread.cpp -o gluethread/glthread.o
 
 
 4. **Link the Object Files:**
 - Link the object files to create the executable:
 
-   g++ -g testapp.o mm.o gluethread/glthread.o -o exe
+  #
+      g++ -g testapp.o mm.o gluethread/glthread.o -o exe
 
 
 5. **Run the Executable:**
 - Execute the program:
 
-   ./exe
+  #
+      ./exe
 
 
 6. **Clean Up (Optional):**
 - Remove object files and the executable if needed:
 
-   rm -f testapp.o mm.o gluethread/glthread.o exe
+  #
+      rm -f testapp.o mm.o gluethread/glthread.o exe
 
 
 ## Running the Project with Makefile and Docker
@@ -58,22 +64,25 @@ For a containerized and automated approach, use the provided Makefile to build a
 1. **Install Docker:**
 - Ensure Docker is installed and running. On Ubuntu, install it with:
 
-   sudo apt-get update
-   sudo apt-get install docker.io
-   sudo systemctl start docker
-   sudo systemctl enable docker
+  #
+      sudo apt-get update
+      sudo apt-get install docker.io
+      sudo systemctl start docker
+      sudo systemctl enable docker
 
 
 2. **Navigate to the Project Directory:**
 - Open a terminal and change to the project directory:
 
-   cd /path/to/allocyte
+  #
+      cd /path/to/allocyte
 
 
 3. **Build the Docker Image:**
 - Use the Makefile to build the Docker image:
 
-   make docker-build
+  #
+      make docker-build
 
 - This runs `docker build -t ayushrakesh/allocyte -f Dockerfile .`, creating an image tagged as `ayushrakesh/allocyte:latest`.
 
@@ -81,7 +90,8 @@ For a containerized and automated approach, use the provided Makefile to build a
 4. **Run the Docker Container:**
 - Start a container from the image:
 
-   make docker-run
+  #
+      make docker-run
 
 - This runs `docker run -it ayushrakesh/allocyte`, providing an interactive terminal to execute the program inside the container.
 
@@ -89,8 +99,9 @@ For a containerized and automated approach, use the provided Makefile to build a
 5. **(Optional) Push to Docker Hub:**
 - If you have a Docker Hub account, log in and push the image:
 
-   docker login
-   make docker-push
+  #
+      docker login
+      make docker-push
 
 - This runs `docker push ayushrakesh/allocyte`, uploading the image to your Docker Hub repository.
 
@@ -98,7 +109,8 @@ For a containerized and automated approach, use the provided Makefile to build a
 6. **Full Workflow (Build and Run):**
 - For a single command to build and run, use:
 
-   make docker
+  #
+      make docker
 
 - This executes both `docker-build` and `docker-run` sequentially.
 
