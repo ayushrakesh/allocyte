@@ -1,6 +1,6 @@
 # Memory Manager - allocyte
 
-This is a C++ project implementing a custom linux memory management system with multiple components.
+This is a C++ project implementing a custom linux heap memory management system with multiple components.
 
 ## Requirements
 - **For Local Compilation:**
